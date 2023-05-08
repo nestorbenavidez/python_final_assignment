@@ -1,5 +1,7 @@
-# python_final_assignment
-Catolica Porto Business School - Final Assignment for Python Fundamentals
+# Python final assignment
+Fundamentals, Pandas and Matplotlib
+
+## Catolica Porto Business School 
 
 - Nestor Benavidez Tapia
 - Maria Teresa Silva
