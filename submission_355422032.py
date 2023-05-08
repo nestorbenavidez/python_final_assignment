@@ -17,7 +17,7 @@ os.chdir('/Users/nestorbenavidez/Downloads/Group-Assignment')
 print('Current working dir:', os.getcwd())
 
 # Replace your student ID
-student_id = 'YOURSTUDENTID'
+student_id = '355422032'
 
 
 """
@@ -102,12 +102,22 @@ def q4(companies=('Apple', 'Amazon', 'Alphabet', 'Microsoft', 'Visa')):
 print(q4(companies=('Apple', 'Amazon', 'Alphabet', 'Microsoft', 'Visa')))
 
 
+import os
+
 def q5(companies=('Microsoft', 'Berkshire Hathaway', 'Apple')):
-    # Your code follows below
+    # Create the subdirectory if it doesn't exist
+    if not os.path.exists('data-task1'):
+        os.makedirs('data-task1')
 
-
+    # Create empty text files for each company
+    for company in companies:
+        filename = os.path.join('data-task1/', f'{company}.txt')
+        with open(filename, 'w') as f:
+            pass
     # Do not change the code below
     return True
+
+print(q5(companies=('Microsoft', 'Berkshire Hathaway', 'Apple')))
 
 
 def q6(input_dir='./data-task1/q6/'):
