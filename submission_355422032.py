@@ -9,11 +9,13 @@ code follows below: replace `None` with your code". Do not remove any of the cod
 """
 
 import os
+import pickle
+
 # Add your import statements here...
 
 
 # Change working directory: add the correct path
-os.chdir('/Users/nestorbenavidez/Downloads/Group-Assignment')
+os.chdir('/Users/nestorbenavidez/Documents/python_final_assignment')
 print('Current working dir:', os.getcwd())
 
 # Replace your student ID
@@ -64,7 +66,7 @@ def q1():
     # Return the examples
     return example_list, example_tuple, example_dict
 
-print(q1()) # For testing porpuses I'm printing to the screen
+
 
 #we use the exponentiation operator ** with the value of 0.5 to calculate the square root of each number
 # in the range. The resulting list of square roots is then returned.
@@ -79,14 +81,17 @@ def q2(lower_limit=11, upper_limit=23):
     # Do not change the code below
     return square_roots
 
-print(q2()) # For testing porpuses I'm printing to the screen
+
 
 def q3(num_rows=15, num_cols=100):
     # Your code follows below: add your code and assign the created DataFrame to `df`
+    df = [[None] * num_cols for _ in range(num_rows)]
 
-    df = None
+    # Save the DataFrame as a pickle file
+    with open('./data-task1/q3_df.pkl', 'wb') as f:
+        pickle.dump(df, f)
 
-    # Do not change the code below
+    # Return the DataFrame
     return df
 
 
@@ -99,11 +104,6 @@ def q4(companies=('Apple', 'Amazon', 'Alphabet', 'Microsoft', 'Visa')):
     # Return the new list of company names.
     return companies_new
 
-print(q4(companies=('Apple', 'Amazon', 'Alphabet', 'Microsoft', 'Visa')))
-
-
-import os
-
 def q5(companies=('Microsoft', 'Berkshire Hathaway', 'Apple')):
     # Create the subdirectory if it doesn't exist
     if not os.path.exists('data-task1'):
@@ -111,20 +111,24 @@ def q5(companies=('Microsoft', 'Berkshire Hathaway', 'Apple')):
 
     # Create empty text files for each company
     for company in companies:
-        filename = os.path.join('data-task1/', f'{company}.txt')
+        filename = os.path.join('data-task1', f'{company}.txt')
         with open(filename, 'w') as f:
             pass
-    # Do not change the code below
+
     return True
 
-print(q5(companies=('Microsoft', 'Berkshire Hathaway', 'Apple')))
 
-
-def q6(input_dir='./data-task1/q6/'):
+def q6(input_dir='data-task1/q6/'):
     # Your code follows below: add your code (find all .txt files in `input_dir` and
     # assign the corresponding list to `extracted_contents`
-
-    extracted_contents = None
+    extracted_contents = []
+    for root, dirs, files in os.walk(input_dir):
+        for file in files:
+            if file.endswith('.txt'):
+                file_path = os.path.join(root, file)
+                with open(file_path, 'r') as f:
+                    content = f.read()
+                    extracted_contents.append(content)
 
     # Do not change the code below
     return extracted_contents
