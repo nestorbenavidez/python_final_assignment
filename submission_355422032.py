@@ -10,6 +10,8 @@ code follows below: replace `None` with your code". Do not remove any of the cod
 
 import os
 import pickle
+import pandas as pd
+
 
 # Add your import statements here...
 
@@ -65,7 +67,6 @@ def q1():
 
     # Return the examples
     return example_list, example_tuple, example_dict
-
 
 
 #we use the exponentiation operator ** with the value of 0.5 to calculate the square root of each number
@@ -135,106 +136,113 @@ def q6(input_dir='data-task1/q6/'):
 
 
 """
-Task 2: pandas - Maria
+Task 2: pandas
 """
 
 def q10():
-    # Your code follows below: replace `None` with your code
-    comp_info = None
-    comp_data = None
+    # Load the two CSV files: company-info.csv and compensation-data.csv
+    comp_info = pd.read_csv('./data-task2/company-info.csv')
+    comp_data = pd.read_csv('./data-task2/compensation-data.csv')
 
-    # Do not change the code below
+    # Return the loaded data frames
     return comp_info, comp_data
-
+print("q10")
+print(q10())
 
 def q11():
-    # Run this code to load the data set (necessary for next steps)
+    # Load the data set
     _, df_data = q10()
 
-    # Your code follows below: replace `None` with your code
-    df_data['female'] = None
+    # Check if the 'GENDER' column exists in the DataFrame
+    if 'gender' not in df_data.columns:
+        print("Error: 'GENDER' column is missing in the DataFrame.")
+        return None
 
-    # Do not change the code below
+    # Create a new column 'female' with a value of 1 if the executive is female, 0 otherwise
+    df_data['female'] = df_data['gender'].apply(lambda x: 1 if x == 'F' else 0)
+
+    # Return the modified data frame
     return df_data
 
+print("q11")
+print(q11())
 
 def q12():
     # Run this code to load the data set (necessary for next steps)
     df_info, _ = q10()
     df_data = q11()
 
-    # Your code follows below: add your code and assign the company name to `company_name`. It
-    # is easiest to go step by step:
-
     # Step 1: Filter `df_data` and keep only observations of 2017
-    filtered_df = None
+    filtered_df = df_data[df_data['year'] == 2017]
 
     # Step 2: Use the filtered DataFrame and compute/count the overall number of executives
-    # and the number of female executives per company. Use pandas split-apply-combine
-    # approach for this step (have a look at the documentation). The output is a new DataFrame
-    # with the counts per company. Assign the result to a variable `exec_counts`. If you did
-    # everything correctly, you end up with three columns: gvkey, num_total_execs,
-    # and num_female_execs
-    exec_counts = None
+    # and the number of female executives per company
+    exec_counts = filtered_df.groupby('gvkey').agg(
+        num_total_execs=('exec_fullname', 'size'),
+        num_female_execs=('female', 'sum')
+    ).reset_index()
 
     # Step 3: Use `exec_counts` and compute the share/percentage of female executives per company
-    exec_counts['share_female'] = None
+    exec_counts['share_female'] = exec_counts['num_female_execs'] / exec_counts['num_total_execs']
 
-    # Step 4: Merge `exec_counts` with df_info
-    exec_counts = None
+    # Step 4: Merge `exec_counts` with `df_info` to retrieve company names
+    merged_df = pd.merge(exec_counts, df_info[['gvkey', 'coname']], on='gvkey', how='inner')
 
-    # Step 5: What is the name of the company with the highest percentage of female executives?
-    company_name = None
+    # Step 5: Find the maximum share_female value
+    max_share_female = merged_df['share_female'].max()
 
-    # Do not change the code below
-    return company_name
+    # Step 6: Get the company names with the maximum share_female value
+    company_names = merged_df[merged_df['share_female'] == max_share_female]['coname'].tolist()
 
+    # Return the list of company names
+    return company_names
+
+
+
+print("q12")
+print(q12())
 
 def q13():
-    # Run this code to load the data set (necessary for next steps)
+    # Load the data set
     _, df_data = q10()
 
-    # Your code follows below: replace `None` with your code
-    average_age_per_company = None
+    # Filter the data for the year 2016 and calculate the average age per company
+    average_age_per_company = df_data[df_data['year'] == 2016].groupby('gvkey')['age'].mean()
 
-    # Do not change the code below
+    # Return the average age per company
     return average_age_per_company
-
+print("q13")
+print(q13())
 
 def q14():
-    # Run this code to load the data set (necessary for next steps)
+    # Load the data sets
     df_info, df_data = q10()
 
-    # Your code follows below: add your code and assign the new DataFrame to `ceo_tenure`. As
-    # before, we work in smaller steps.
+    # Merge `df_data` and `df_info`
+    merged_df = pd.merge(df_data, df_info, on='gvkey')
 
-    # Step 1: We need the company name. Hence, merge df_data and df_info
-    ceo_tenure = None
+    # Format the date columns 'becameceo' and 'leftofc' as a date
+    merged_df['becameceo'] = pd.to_datetime(merged_df['becameceo'])
+    merged_df['leftofc'] = pd.to_datetime(merged_df['leftofc'])
 
-    # Step 2: Format the date columns `becameceo` and `leftofc` as a date
+    # If the CEO was appointed in the past but there is no end date, set the end date to '2020-12-31'
+    merged_df.loc[merged_df['leftofc'].isnull() & (merged_df['becameceo'] < '2021-01-01'), 'leftofc'] = '2020-12-31'
 
+    # Create a new column 'duration_tenure' with the tenure, i.e., difference of end and start date
+    merged_df['duration_tenure'] = (merged_df['leftofc'] - merged_df['becameceo']).dt.days
 
-    # Step 3: If the CEO was appointed in the past but there is no end date, set the
-    # end date to '2020-12-31' (as a proxy for "still in office")
-
-
-
-    # Step 4: Create a new column with the tenure, i.e., difference of end and start date
-    ceo_tenure['duration_tenure'] = None
-
-    # Step 5: Remove rows with invalid `duration_tenure` (e.g., negative tenure of NA
-    # tenure), remove duplicates and keep only the columns in `cols_to_export`
+    # Remove rows with invalid 'duration_tenure', remove duplicates, and keep only the desired columns
     cols_to_export = ['gvkey', 'coname', 'exec_fullname', 'gender', 'becameceo', 'leftofc', 'duration_tenure']
-    filtered_ceo_tenure = None
+    filtered_ceo_tenure = merged_df.drop_duplicates(subset=cols_to_export).loc[merged_df['duration_tenure'] >= 0, cols_to_export]
 
+    # Export the DataFrame as a pickled file
+    filtered_ceo_tenure.to_pickle('./data-task2/ceo_data.pkl')
 
-    # Step 6: Export the DataFrame `filtered_ceo_tenure` as a Pickle file
-
-
-
-    # Do not change the code below
+    # Return the filtered DataFrame
     return filtered_ceo_tenure
 
+print("q14")
+print(q14())
 
 """
 Task 3: Matplotlib
