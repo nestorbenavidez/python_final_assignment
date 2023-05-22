@@ -135,7 +135,7 @@ def q6(input_dir='data-task1/q6/'):
 
 
 """
-Task 2: pandas
+Task 2: pandas - Maria
 """
 
 def q10():
