@@ -11,7 +11,7 @@ code follows below: replace `None` with your code". Do not remove any of the cod
 import os
 import pickle
 import pandas as pd
-
+import matplotlib.pyplot as plt
 
 # Add your import statements here...
 
@@ -250,22 +250,25 @@ Task 3: Matplotlib
 
 def q21():
     # Your code follows below: replace `None` with your code
-    df = None
+    df = pd.read_pickle('./data-task3/daily-returns.pkl')
 
     # Do not change the code below
     return df
-
+print("q21")
+print(q21())
 
 def q22():
     # Run this code to load the data set
     returns_data = q21()
 
     # Your code follows below: add your code and assign the new DataFrame to `monthly_data`.
-    monthly_data = None
+    returns_data['Month'] = returns_data.index.to_period('M')
+    monthly_data = (1 + returns_data[['Microsoft', 'BP']]).groupby(returns_data['Month']).prod() - 1
 
     # Do not change the code below
     return monthly_data
-
+print("q22")
+print(q22())
 
 def q23():
     global student_id
@@ -274,7 +277,11 @@ def q23():
     monthly_data = q22()
 
     # Your code follows below: add your code and assign the plot to a variable `plot`
-    plot = None
+    plt.figure(figsize=(10, 6))
+    plot = monthly_data.plot.bar()
+    plt.xlabel('Months')
+    plt.ylabel('Cumulative Returns')
+    plt.title('Cumulative Monthly Returns Comparison')
 
     # Run this to show your plot
     plot.figure.show()
@@ -282,3 +289,6 @@ def q23():
     # Do not change the code below
     plot.figure.savefig(str(student_id) + '.png')
     return plot
+
+print("q23")
+print(q23())
