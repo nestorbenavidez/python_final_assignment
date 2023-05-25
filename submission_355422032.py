@@ -22,7 +22,13 @@ print('Current working dir:', os.getcwd())
 
 # Replace your student ID
 student_id = '355422032'
-
+"""
+Student ids - 
+Nestor: 355422032
+Charlotte : 357922095
+Tiago : 355422039
+Maria Teresa : 351216053
+"""
 
 """
 Example:
@@ -68,7 +74,6 @@ def q1():
     # Return the examples
     return example_list, example_tuple, example_dict
 
-
 #we use the exponentiation operator ** with the value of 0.5 to calculate the square root of each number
 # in the range. The resulting list of square roots is then returned.
 
@@ -82,8 +87,6 @@ def q2(lower_limit=11, upper_limit=23):
     # Do not change the code below
     return square_roots
 
-
-
 def q3(num_rows=15, num_cols=100):
     # Your code follows below: add your code and assign the created DataFrame to `df`
     df = [[None] * num_cols for _ in range(num_rows)]
@@ -94,8 +97,6 @@ def q3(num_rows=15, num_cols=100):
 
     # Return the DataFrame
     return df
-
-
 
 def q4(companies=('Apple', 'Amazon', 'Alphabet', 'Microsoft', 'Visa')):
     # List comprehension that checks for the presence of 'p' in each company name and appends
@@ -117,7 +118,6 @@ def q5(companies=('Microsoft', 'Berkshire Hathaway', 'Apple')):
             pass
 
     return True
-
 
 def q6(input_dir='data-task1/q6/'):
     # Your code follows below: add your code (find all .txt files in `input_dir` and
@@ -146,8 +146,6 @@ def q10():
 
     # Return the loaded data frames
     return comp_info, comp_data
-print("q10")
-print(q10())
 
 def q11():
     # Load the data set
@@ -159,17 +157,14 @@ def q11():
         return None
 
     # Create a new column 'female' with a value of 1 if the executive is female, 0 otherwise
-    df_data['female'] = df_data['gender'].apply(lambda x: 1 if x == 'F' else 0)
+    df_data['female'] = df_data['gender'].apply(lambda x: 1 if x == 'FEMALE' else 0)
 
     # Return the modified data frame
     return df_data
 
-print("q11")
-print(q11())
-
 def q12():
     # Run this code to load the data set (necessary for next steps)
-    df_info, _ = q10()
+    comp_info, _ = q10()
     df_data = q11()
 
     # Step 1: Filter `df_data` and keep only observations of 2017
@@ -186,8 +181,7 @@ def q12():
     exec_counts['share_female'] = exec_counts['num_female_execs'] / exec_counts['num_total_execs']
 
     # Step 4: Merge `exec_counts` with `df_info` to retrieve company names
-    merged_df = pd.merge(exec_counts, df_info[['gvkey', 'coname']], on='gvkey', how='inner')
-
+    merged_df = pd.merge(exec_counts, comp_info[['gvkey', 'coname']], on='gvkey', how='inner')
     # Step 5: Find the maximum share_female value
     max_share_female = merged_df['share_female'].max()
 
@@ -196,11 +190,6 @@ def q12():
 
     # Return the list of company names
     return company_names
-
-
-
-print("q12")
-print(q12())
 
 def q13():
     # Load the data set
@@ -211,8 +200,6 @@ def q13():
 
     # Return the average age per company
     return average_age_per_company
-print("q13")
-print(q13())
 
 def q14():
     # Load the data sets
@@ -241,9 +228,6 @@ def q14():
     # Return the filtered DataFrame
     return filtered_ceo_tenure
 
-print("q14")
-print(q14())
-
 """
 Task 3: Matplotlib
 """
@@ -254,8 +238,6 @@ def q21():
 
     # Do not change the code below
     return df
-print("q21")
-print(q21())
 
 def q22():
     # Run this code to load the data set
@@ -267,8 +249,6 @@ def q22():
 
     # Do not change the code below
     return monthly_data
-print("q22")
-print(q22())
 
 def q23():
     global student_id
@@ -277,7 +257,7 @@ def q23():
     monthly_data = q22()
 
     # Your code follows below: add your code and assign the plot to a variable `plot`
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(10,8))
     plot = monthly_data.plot.bar()
     plt.xlabel('Months')
     plt.ylabel('Cumulative Returns')
@@ -289,6 +269,3 @@ def q23():
     # Do not change the code below
     plot.figure.savefig(str(student_id) + '.png')
     return plot
-
-print("q23")
-print(q23())
